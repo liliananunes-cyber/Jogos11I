@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="images/cogumelo.png">
+    <title>Mario Jump</title>
+</head>
+<body>
+    <div>
+        <div class="game-board">
+
+            <h1 id="gameOverText">Você perdeu! Sua pontuação foi de: </h1>
+
+            <img src="images/clouds.png" class="clouds">
+            <img src="images/mario.gif" class="mario">
+
+            <div class="obstaculos">
+                <img src="images/pipe.png" id="cano">
+                <img src="images/energetico.png" id="energetico">
+                <img src="images/passaro.gif" id="passaro">
+            </div>
+        </div>
+    
+        <div class="menu">
+            <div class="botoes">
+                <button id="restart" onclick="window.location.reload()">
+                    <img src="images/restart.png" alt="Restart">
+                </button>
+
+                <button>
+                    <img id=pause src="images/pause.png" alt="pause">
+                </button>
+                
+            </div>
+
+            <div class="scoreboard">
+                <img src="images/star.png" alt="estrela">
+                <p id="score">Score: 0</p>
+            </div>
+        </div>
+    </div>
+<script src="js/script.js"></script>
+</body>
+</html>
