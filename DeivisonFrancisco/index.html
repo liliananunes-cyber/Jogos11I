@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Press Start 2P', cursive;
+    }
+
+    body {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #222;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    button {
+      padding: 12px 20px;
+      border: 3px solid white;
+      background: black;
+      color: white;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    button:hover {
+      background: #444;
+      transform: scale(1.05);
+    }
+
+    .control-box {
+      border: 1px solid #555;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 5px;
+    }
+
+    h3 {
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+
+    p {
+      font-size: 10px;
+      line-height: 1.8;
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<audio id="bgMusic" src="/fighting-game/music/Street Fighter 5 - Ryu's Theme (SFV OST) [oUn549UmSlw].mp3" loop></audio>
+<body>
+  <div style="position: relative; display: inline-block; line-height: 0;">
+    
+    <div
+      style="
+        position: absolute;
+        display: flex;
+        width: 100%;
+        align-items: center;
+        padding: 20px;
+        z-index: 5;
+      "
+    >
+      <div
+        style="
+          position: relative;
+          width: 100%;
+          display: flex;
+          justify-content: flex-end;
+          border: 4px solid white;
+          background: white;
+        "
+      >
+        <div style="background-color: red; height: 30px; width: 100%"></div>
+        <div
+        id="playerHealth"
+        style="
+          position: absolute;
+          background: #818cf8;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          width: 100%;
+        "
+      ></div>
+      
+      </div>
+
+      <div
+        id="timer"
+        style="
+          background-color: black;
+          width: 100px;
+          height: 50px;
+          flex-shrink: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          border: 4px solid white;
+          margin: 0 10px;
+        "
+      >
+        60
+      </div>
+
+      <div
+        style="
+          position: relative;
+          width: 100%;
+          border: 4px solid white;
+          background: white;
+        "
+      >
+        <div style="background-color: red; height: 30px; width: 100%"></div>
+        <div
+        id="enemyHealth"
+        style="
+          position: absolute;
+          background: #818cf8;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          width: 100%;
+        "
+      ></div>
+      
+      </div>
+    </div>
+
+    <div
+      id="displayText"
+      style="
+        position: absolute;
+        color: white;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        display: none;
+        z-index: 10;
+        font-size: 30px;
+      "
+    >
+      Tie
+    </div>
+
+    <div
+      id="startMenu"
+      style="
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 30;
+      "
+    >
+      <div style="background: black; border: 4px solid white; padding: 40px; text-align: center; color: white; max-width: 800px;">
+        <h1 style="margin-bottom: 30px; font-size: 32px; color: #ffcc00;">COMBATE KANJI</h1>
+        
+        <div style="display: flex; justify-content: center; gap: 30px; margin-bottom: 40px;">
+          <div class="control-box">
+            <h3 style="color: #818cf8;">JOGADOR 1</h3>
+            <p><strong>A / D</strong> - Mover</p>
+            <p><strong>W</strong> - Pulo Duplo</p>
+            <p><strong>ESPAÇO</strong> - Atacar</p>
+          </div>
+
+          <div class="control-box">
+            <h3 style="color: #ff4444;">JOGADOR 2</h3>
+            <p><strong>← / →</strong> - Mover</p>
+            <p><strong>↑</strong> - Pulo Duplo</p>
+            <p><strong>↓</strong> - Atacar</p>
+          </div>
+        </div>
+
+        <button id="startBtn" style="font-size: 18px; padding: 15px 40px;">INICIAR JOGO</button>
+        <p style="margin-top: 20px; opacity: 0.6; font-size: 8px;">Pressione ESC para pausar durante a luta</p>
+      </div>
+    </div>
+
+    <div
+      id="pauseMenu"
+      style="
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 20;
+      "
+    >
+      <div style="background: black; border: 4px solid white; padding: 40px; text-align: center;">
+        <h1 id="pauseTitle" style="color: white; margin-bottom: 30px; font-size: 24px;">⏸ PAUSADO</h1>
+        <button id="resumeBtn" style="width: 100%; margin-bottom: 15px;">▶ CONTINUAR</button>
+        <button id="restartBtn" style="width: 100%;">🔄 REINICIAR</button>
+      </div>
+    </div>
+
+    <canvas></canvas>
+  </div>
+
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  ></script>
+  <script src="js/utils.js"></script>
+  <script src="js/classes.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>
