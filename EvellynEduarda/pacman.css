@@ -1,0 +1,40 @@
+body {
+    text-align: center;
+    overflow: hidden;
+}
+
+#board {
+    background-color: black;
+} 
+#btn-iniciar {
+    font-family: "Bungee", sans-serif;
+    font-size: 22px;
+    padding: 15px 40px;
+    font-weight: bold;
+    color: rgb(238, 255, 0);
+    background-color: blue;
+  
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+  }
+  #btn-iniciar {
+    transition: opacity 0.5s ease;
+  }
+  
+  
+  /* efeito ao passar o mouse */
+  #btn-iniciar:hover {
+    transform: scale(1.1);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.5);
+  }
+  
+  /* efeito ao clicar */
+  #btn-iniciar:active {
+    transform: scale(1.05);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
+  }
+
+   
