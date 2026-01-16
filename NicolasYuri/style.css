@@ -1,0 +1,117 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.game-board {
+  width: 80%;
+  height: 500px;
+  border-bottom: 15px solid #2ecc71;
+  margin: 40px auto;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(#6dd5fa, #ffffff);
+}
+
+/* MARIO */
+.mario {
+  width: 150px;
+  position: absolute;
+  bottom: 0;
+}
+
+/* PULO */
+.jump {
+  animation: jump 500ms ease-in-out;
+}
+
+/* CANO */
+.pipe {
+  position: absolute;
+  bottom: 0;
+  width: 80px;
+  right: -80px;
+  animation: pipe-animation 2s infinite linear;
+}
+
+/* SONIC (INVERTIDO) */
+.enemy {
+  position: absolute;
+  bottom: 0;
+  width: 90px;
+  right: -100px;
+  animation: enemy-animation 3s infinite linear;
+  transform: scaleX(-1);
+}
+
+/* TIRO */
+.fireball {
+  position: absolute;
+  width: 40px;
+  bottom: 80px;
+  left: 140px;
+  animation: fireball-animation 0.6s linear forwards;
+}
+
+/* NUVENS */
+.clouds {
+  position: absolute;
+  width: 600px;
+  top: 50px;
+  opacity: 0.8;
+  animation: clouds-animation 30s infinite linear;
+}
+
+/* HUD */
+#score {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 22px;
+  color: #fff;
+  background: rgba(0,0,0,0.4);
+  padding: 8px 14px;
+  border-radius: 8px;
+}
+
+#game-over {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 48px;
+  color: red;
+  display: none;
+  text-align: center;
+}
+
+/* ANIMAÇÕES */
+@keyframes pipe-animation {
+  from { right: -80px; }
+  to { right: 100%; }
+}
+
+@keyframes enemy-animation {
+  from { right: -100px; }
+  to { right: 100%; }
+}
+
+@keyframes fireball-animation {
+  from { left: 140px; }
+  to { left: 100%; }
+}
+
+@keyframes jump {
+  0% { bottom: 0; }
+  30% { bottom: 180px; }
+  40% { bottom: 180px; }
+  50% { bottom: 180px; }
+  60% { bottom: 180px; }
+  100% { bottom: 0; }
+}
+
+@keyframes clouds-animation {
+  from { right: -600px; }
+  to { right: 100%; }
+}
