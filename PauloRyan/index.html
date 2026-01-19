@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Memória</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Topo -->
+    <div class="top">
+        <div id="timer">⏱ Tempo: 0s</div>
+        <div id="record">🏆 Recorde: —</div>
+    </div>
+
+    <!-- Botões -->
+    <button id="start-btn">▶️ Iniciar Rodada</button>
+    <button id="pause-btn">⏸ Pausar</button>
+    <button id="reset-timer-btn">🔄 Reiniciar Jogo</button>
+
+    <!-- Tabuleiro -->
+    <div class="game" id="game"></div>
+
+    <!-- Tela de vitória -->
+    <div class="victory" id="victory">
+        <h1>🏆 VITÓRIA!!! 🏆</h1>
+        <p id="final-time"></p>
+        <button id="play-again-btn">▶️ Jogar Novamente</button>
+    </div>
+
+    <!-- Confete -->
+    <canvas id="confetti"></canvas>
+
+    <!-- Sons -->
+    <audio id="flip-sound" src="sounds/flip.mp3"></audio>
+    <audio id="victory-sound" src="sounds/victory.mp3"></audio>
+
+    <script src="script.js"></script>
+</body>
+</html>
