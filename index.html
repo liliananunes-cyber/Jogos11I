@@ -1,50 +1,77 @@
-
 <!DOCTYPE html>
 <html lang="pt">
 <head>
   <meta charset="UTF-8">
-  <title>Jogos</title>
+  <title>Galeria de Jogos</title>
 
   <style>
+    /* RESET BÁSICO */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
-      padding: 20px;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #1e1e2f, #2c2c54);
+      color: #fff;
+      min-height: 100vh;
+      padding: 30px;
     }
 
     h1 {
       text-align: center;
+      margin-bottom: 10px;
+      font-size: 2.2em;
+      letter-spacing: 1px;
+    }
+
+    p {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #ddd;
     }
 
     .jogos {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 12px;
-      max-width: 800px;
+      max-width: 1000px;
       margin: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
     }
 
     .jogos a {
-      display: block;
-      padding: 15px;
-      background-color: #ffffff;
-      border-radius: 8px;
+      background: #ffffff;
+      color: #222;
+      padding: 18px;
+      border-radius: 12px;
       text-decoration: none;
-      color: #000;
       text-align: center;
       font-weight: bold;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      font-size: 1.05em;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+      transition: transform 0.3s, box-shadow 0.3s;
     }
 
     .jogos a:hover {
-      background-color: #e0e0e0;
+      transform: translateY(-6px) scale(1.03);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.35);
+    }
+
+    footer {
+      margin-top: 40px;
+      text-align: center;
+      font-size: 0.9em;
+      color: #bbb;
     }
   </style>
 </head>
 
 <body>
 
-  <h1>Jogos Desenvolvidos</h1>
+  <h1>🎮 Galeria de Jogos</h1>
+  <p>Projetos desenvolvidos pelos alunos</p>
 
   <div class="jogos">
     <a href="./CastroFlegler/index.html">Jogo do Mário</a>
@@ -60,21 +87,9 @@
     <a href="./PauloRyan/index.html">Jogo da Memória</a>
   </div>
 
+  <footer>
+    Curso Profissional de Programador de Informática – 11º Ano
+  </footer>
+
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
