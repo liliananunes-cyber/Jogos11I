@@ -1,0 +1,139 @@
+* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: #5c94fc;
+  overflow: hidden;
+}
+
+/* MENU */
+.menu {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  z-index: 10;
+}
+
+.menu button {
+  margin-top: 20px;
+  padding: 15px 30px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* HUD */
+.hud {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  color: white;
+  font-size: 18px;
+  text-shadow: 2px 2px black;
+  z-index: 5;
+}
+
+/* GAME AREA */
+.game {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  background: #5c94fc;
+  overflow: hidden;
+  border-bottom: 60px solid #c0392b;
+}
+
+/* CHÃO (BLOCOS) */
+.game::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  background: repeating-linear-gradient(
+    90deg,
+    #c0392b,
+    #c0392b 40px,
+    #a93226 40px,
+    #a93226 80px
+  );
+}
+
+/* NUVENS */
+.clouds {
+  position: absolute;
+  top: 40px;
+  width: 200%;
+  height: 100px;
+  background: url("https://i.imgur.com/N5uCbDu.png") repeat-x;
+  background-size: contain;
+  animation: moveClouds 60s linear infinite;
+}
+
+/* MARIO */
+.mario {
+  position: absolute;
+  bottom: 60px;
+  left: 80px;
+  width: 120px;
+  image-rendering: pixelated;
+  z-index: 3;
+}
+
+/* PIPES */
+.pipes {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+}
+
+.pipe {
+  position: absolute;
+  bottom: 60px;
+  width: 70px;
+  background: linear-gradient(to right, #1e8449, #2ecc71, #1e8449);
+  border: 4px solid #145a32;
+}
+
+.pipe::before {
+  content: "";
+  position: absolute;
+  top: -25px;
+  left: -12px;
+  width: 94px;
+  height: 30px;
+  background: inherit;
+  border: 4px solid #145a32;
+}
+
+/* BOTÃO MOBILE */
+.jump-btn {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  padding: 20px;
+  border-radius: 50%;
+  font-size: 16px;
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .jump-btn {
+    display: block;
+  }
+}
+
+/* ANIMAÇÕES */
+@keyframes moveClouds {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
