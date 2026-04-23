@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>O Detetive — Descubra o Assassino</title>
+
+  <!-- Fontes do Google: dão aquele visual antigo e elegante ao jogo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Special+Elite&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+  <!-- O nosso ficheiro de estilos -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Ícone que aparece na aba do navegador -->
+  <link rel="icon" type="image/x-icon" href="Icon.jfif">
+</head>
+<body>
+
+<!-- ============================
+     CINEMÁTICA DE ABERTURA
+     Aquela cena dramática que aparece
+     quando o jogador começa um caso novo
+============================ -->
+<div id="cinematic" class="cinematic hidden">
+  <!-- Efeito de chuva no fundo (só visual) -->
+  <div class="cinematic-rain" id="cin-rain"></div>
+  <div class="cinematic-inner">
+    <div class="cinematic-content">
+      <!-- Local onde se passa o caso -->
+      <div class="cinematic-location" id="cin-location"></div>
+      <!-- Título do caso -->
+      <div class="cinematic-title" id="cin-title"></div>
+      <!-- Frases dramáticas que aparecem uma a uma -->
+      <div class="cinematic-lines" id="cin-lines"></div>
+      <!-- Quem foi a vítima -->
+      <div class="cinematic-victim" id="cin-victim"></div>
+      <!-- Botão para saltar a intro e ir direto ao jogo -->
+      <button class="btn gold cinematic-skip" onclick="skipCinematic()">Iniciar Investigação ▶</button>
+    </div>
+  </div>
+</div>
+
+<!-- Botãozinho no canto para ligar/desligar a música -->
+<div class="sound-control">
+  <button onclick="toggleSound()" id="sound-btn" title="Ligar/Desligar música">🔇</button>
+</div>
+
+<!-- Motor de áudio (invisível, só serve para gerar a música ambiente) -->
+<div id="audio-engine" style="display:none"></div>
+
+<!-- Aqui começa o conteúdo principal do jogo -->
+<div id="app">
+
+  <!-- Cabeçalho com o nome do jogo -->
+  <header class="header">
+    <div class="subtitle">Um jogo de mistério noir</div>
+    <h1>O Detetive</h1>
+  </header>
+
+  <!-- ============================
+       ECRÃ INICIAL
+       O jogador vê a "notícia" do crime,
+       as regras e escolhe qual caso jogar
+  ============================ -->
+  <section class="screen active" id="screen-start">
+
+    <!-- Caixa estilo jornal antigo com a história do crime -->
+    <div class="newspaper">
+      <div class="stamp">Urgente</div>
+      <h2>🗞 CRIME MISTERIOSO ABALA A CIDADE</h2>
+      <p>
+        A polícia está sem pistas. Testemunhas contraditórias. Um assassino ainda em liberdade.
+        O Detetive <strong>V. Marlowe</strong> foi chamado para resolver o caso.
+        Interrogue suspeitos, recolha evidências, construa deduções
+        e, quando tiver a certeza, faça a sua acusação.
+      </p>
+    </div>
+
+    <!-- Barra de reputação: mostra o progresso do jogador entre jogos -->
+    <div class="reputation-bar" id="reputation-bar"></div>
+
+    <!-- Lista com as regras / dicas de como jogar -->
+    <ul class="intro-rules">
+      <li>🔍 Interrogue suspeitos e descubra pistas nas respostas</li>
+      <li>🧩 Combine pistas no <strong>Quadro de Dedução</strong> para descobrir conclusões ocultas</li>
+      <li>⭐ Pistas marcadas com estrela são cruciais — não as ignore</li>
+      <li>⚖️ Faça a acusação quando tiver a certeza</li>
+      <li>💀 Tem apenas <strong>3 acusações erradas</strong> antes de perder o caso</li>
+      <li>🎲 O assassino é escolhido aleatoriamente a cada jogo</li>
+    </ul>
+
+    <!-- Onde aparecem os cartões dos casos disponíveis -->
+    <div class="section-label">Escolha o Caso</div>
+    <div id="case-cards"></div>
+
+    <!-- Botão para começar o jogo -->
+    <div class="btn-row">
+      <button class="btn gold" onclick="startGame()">▶ Iniciar Investigação</button>
+    </div>
+
+  </section>
+
+  <!-- ============================
+       ECRÃ DE INVESTIGAÇÃO
+       É aqui que o jogador passa mais tempo:
+       vê suspeitos, pistas, faz deduções e toma notas
+  ============================ -->
+  <section class="screen" id="screen-investigate">
+
+    <!-- Barra no topo: mostra o caso atual, pistas encontradas, erros e tempo -->
+    <div class="status-bar">
+      <span id="status-case">🕵️ Detetive Marlowe</span>
+      <div class="status-right">
+        <span>Pistas: <strong id="clue-count">0</strong></span>
+        <span id="wrong-pips"></span> <!-- Bolinhas que mostram quantos erros restam -->
+        <span id="timer-display" class="timer">⏱ 0:00</span>
+      </div>
+    </div>
+
+    <!-- Cabeçalho do caso (título, local, vítima) -->
+    <div id="case-header-bar"></div>
+
+    <!-- As 4 abas: Suspeitos, Evidências, Dedução e Notas -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('tab-suspects',this)">👥 Suspeitos</button>
+      <button class="tab"        onclick="switchTab('tab-clues',this)">📌 Evidências <span id="clue-tab-count" class="tab-badge"></span></button>
+      <button class="tab"        onclick="switchTab('tab-deduction',this)">🧩 Dedução <span id="deduction-badge" class="tab-badge hidden">!</span></button>
+      <button class="tab"        onclick="switchTab('tab-notes',this)">📓 Notas</button>
+    </div>
+
+    <!-- Aba: Suspeitos — mostra os cartões de cada suspeito -->
+    <div class="tab-content active" id="tab-suspects">
+      <div class="suspects-grid" id="suspects-grid"></div>
+      <div class="btn-row" style="margin-top:24px">
+        <button class="btn gold" onclick="openAccuseModal()">⚖ Fazer Acusação Final</button>
+      </div>
+    </div>
+
+    <!-- Aba: Evidências — lista de todas as pistas que o jogador já encontrou -->
+    <div class="tab-content" id="tab-clues">
+      <div class="clue-filters" id="clue-filters"></div>
+      <div id="clues-list-full">
+        <p class="clue-empty">Nenhuma pista ainda. Interrogue os suspeitos.</p>
+      </div>
+    </div>
+
+    <!-- Aba: Dedução — onde se combinam duas pistas para tirar conclusões -->
+    <div class="tab-content" id="tab-deduction">
+      <p class="deduction-intro">
+        Combine duas pistas para construir deduções. Certas combinações revelam conclusões ocultas
+        que nenhuma pergunta sozinha descobre.
+      </p>
+      <div class="deduction-workspace">
+        <div class="deduction-slots">
+          <!-- Espaço para colocar a primeira pista -->
+          <div class="deduction-slot" id="slot-a" onclick="openCluePickerFor('a')">
+            <div class="slot-label">Pista A</div>
+            <div class="slot-content" id="slot-a-content">Clique para escolher</div>
+          </div>
+          <div class="deduction-op">+</div>
+          <!-- Espaço para colocar a segunda pista -->
+          <div class="deduction-slot" id="slot-b" onclick="openCluePickerFor('b')">
+            <div class="slot-label">Pista B</div>
+            <div class="slot-content" id="slot-b-content">Clique para escolher</div>
+          </div>
+          <div class="deduction-op">=</div>
+          <!-- Botão para ver se a combinação funciona -->
+          <button class="btn gold" onclick="deduce()" style="align-self:center">Deduzir</button>
+        </div>
+        <!-- Aqui aparece o resultado da dedução -->
+        <div id="deduction-result"></div>
+      </div>
+      <!-- Lista de conclusões já descobertas -->
+      <div class="section-label" style="margin-top:28px">Conclusões Descobertas</div>
+      <div id="deductions-list"><p class="clue-empty">Nenhuma conclusão ainda.</p></div>
+    </div>
+
+    <!-- Aba: Notas — bloco de notas livre para o jogador escrever as suas teorias -->
+    <div class="tab-content" id="tab-notes">
+      <div class="notebook">
+        <textarea id="notebook-text" placeholder="Escreva as suas observações, suspeitas e teorias aqui...&#10;&#10;Estas notas são guardadas automaticamente."></textarea>
+        <div class="notebook-footer">
+          <span id="notes-saved-indicator" class="notes-saved"></span>
+          <button class="btn secondary" onclick="clearNotes()" style="padding:6px 14px;font-size:0.75rem">Limpar notas</button>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ============================
+       ECRÃ DE INTERROGATÓRIO
+       Aparece quando o jogador clica
+       num suspeito para fazer perguntas
+  ============================ -->
+  <section class="screen" id="screen-interrogate">
+    <button class="btn secondary back-btn" onclick="showScreen('screen-investigate')">← Voltar</button>
+    <!-- Conteúdo do interrogatório (perguntas e respostas) -->
+    <div id="interrogation-content"></div>
+    <!-- Histórico de respostas deste suspeito -->
+    <div id="answer-history-panel" class="answer-history hidden">
+      <div class="section-label" style="margin-top:28px">📜 Histórico deste Interrogatório</div>
+      <div id="answer-history-list"></div>
+    </div>
+  </section>
+
+  <!-- ============================
+       ECRÃ DE RESULTADO
+       Aparece no fim: se ganhou ou perdeu
+  ============================ -->
+  <section class="screen" id="screen-result">
+    <div id="result-content"></div>
+    <div class="btn-row" style="justify-content:center;margin-top:30px">
+      <button class="btn gold"      onclick="resetGame()">↺ Novo Jogo</button>
+      <button class="btn secondary" onclick="shareResult()">📋 Copiar Resultado</button>
+    </div>
+  </section>
+
+</div><!-- Fim do #app -->
+
+<!-- ============================
+     JANELA: ACUSAÇÃO
+     Aparece quando o jogador quer
+     fazer a acusação final
+============================ -->
+<div class="modal-overlay" id="accuse-modal" onclick="closeAccuseModal(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeAccuseModal()">✕</button>
+    <h2 class="modal-title">⚖ Acusar o Assassino</h2>
+    <p class="modal-subtitle">Esta é a sua acusação formal. Cada erro pesa — escolha com cuidado.</p>
+    <!-- Grelha com os suspeitos para o jogador escolher -->
+    <div class="accusation-grid" id="accusation-grid"></div>
+  </div>
+</div>
+
+<!-- Janela que aparece quando o jogador acusa a pessoa errada -->
+<div class="modal-overlay" id="wrong-modal" onclick="closeWrongModal(event)">
+  <div class="modal-box modal-wrong">
+    <div class="modal-wrong-icon">❌</div>
+    <h2 id="wrong-modal-title">Inocente!</h2>
+    <p id="wrong-modal-body"></p>
+    <div id="wrong-modal-pips"></div>
+    <button class="btn gold" onclick="closeWrongModal()" style="margin-top:20px">Continuar a investigar</button>
+  </div>
+</div>
+
+<!-- Janela para escolher uma pista (usada no quadro de dedução) -->
+<div class="modal-overlay" id="clue-picker-modal" onclick="closeCluePickerModal(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeCluePickerModal()">✕</button>
+    <h2 class="modal-title">🔍 Selecionar Pista</h2>
+    <p class="modal-subtitle">Escolha uma pista para colocar no quadro de dedução.</p>
+    <div id="clue-picker-list"></div>
+  </div>
+</div>
+
+<!-- Onde aparecem as notificações rápidas (toasts) -->
+<div id="toast-container"></div>
+
+<!-- Os ficheiros JavaScript: dados dos casos e lógica do jogo -->
+<script src="data.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
